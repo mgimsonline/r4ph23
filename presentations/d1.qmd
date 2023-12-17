@@ -1,0 +1,567 @@
+---
+title: "R for Public Health"
+subtitle: "18 - 23 Dec 2023"
+# date: "2023-12-18"
+# date-format: "DD MMM YYYY"
+author: "Ashwini Kalantri"
+logo: r23_head.png
+institute: "Department of Community Medicine, MGIMS"
+format:
+  revealjs:
+    theme: night
+    slide-number: true
+    css: styles.css
+    picture: r4ph23.png
+---
+
+# Get started
+```{r}
+#| echo: true
+#| output: asis
+#| output-location: column-fragment
+"Hello World!"
+```
+
+## Assignment {auto-animate="true"}
+`<-`
+```{r}
+#| echo: true
+#| output-location: column-fragment
+text1 <- "Hello World!"
+print(text1)
+```
+`->`
+```{r}
+#| echo: true
+#| output-location: column-fragment
+"Hello World!" -> text2
+print(text2)
+```
+`=`
+```{r}
+#| echo: true
+#| output-location: column-fragment
+text3 = "Hello World!"
+print(text3)
+```
+
+
+## Reserved Words {auto-animate="true"}
+:::: {.columns}
+
+::: {.column width="30%"}
+- if
+- else
+- while
+- repeat
+- for
+- function
+- in
+:::
+
+::: {.column width="30%"}
+- next
+- break
+- TRUE
+- FALSE
+- NULL
+- Inf
+- NaN
+:::
+
+::: {.column width="30%"}
+- NA
+- NA_integer
+- NA_real
+- NA_complex_
+- NA_character_
+- …
+:::
+
+::::
+
+
+## Commenting {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+# Print the text "Hello World"
+print("Hello World!")
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+print("Hello World!") # Print the text "Hello World"
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+
+# Multi-line comment
+# about printing the text "Hello World"
+print("Hello World!")
+```
+
+# Operators
+
+## Arithmetic {auto-animate="true"}
+Addition
+```{r}
+#| echo: true
+#| output-location: column-fragment
+2 + 5
+```
+
+Subtraction
+```{r}
+#| echo: true
+#| output-location: column-fragment
+73 - 32
+```
+
+Multiplication
+```{r}
+#| echo: true
+#| output-location: column-fragment
+47 * 7
+```
+
+Division
+```{r}
+#| echo: true
+#| output-location: column-fragment
+86 / 3
+```
+
+## Arithmetic {auto-animate="true" visibility="uncounted"}
+Exponentiation
+```{r}
+#| echo: true
+#| output-location: column-fragment
+8^2
+```
+
+Modulus
+```{r}
+#| echo: true
+#| output-location: column-fragment
+77%%3
+
+```
+
+## Relational  {auto-animate="true"}
+Greater
+```{r}
+#| echo: true
+#| output-location: column-fragment
+5 > 6
+```
+Lesser
+```{r}
+#| echo: true
+#| output-location: column-fragment
+5 < 6
+```
+Equal
+```{r}
+#| echo: true
+#| output-location: column-fragment
+6 == 6
+```
+## Relational  {auto-animate="true" visibility="uncounted"}
+Greater or equal
+```{r}
+#| echo: true
+#| output-location: column-fragment
+8 >= 5
+```
+Lesser or equal
+```{r}
+#| echo: true
+#| output-location: column-fragment
+7 <= 10
+```
+Not Equal
+```{r}
+#| echo: true
+#| output-location: column-fragment
+9 != 10
+```
+
+## Joining Logical 
+`AND`
+```{r}
+#| echo: true
+#| output-location: column-fragment
+TRUE & TRUE
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+TRUE & FALSE
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+FALSE & FALSE
+```
+
+`OR`
+```{r}
+#| echo: true
+#| output-location: column-fragment
+TRUE | TRUE
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+TRUE | FALSE
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+FALSE | FALSE
+```
+
+## Classes {auto-animate="true"}
+
+Integer
+```{r}
+#| echo: true
+#| output-location: column-fragment
+int <- 3L
+print(int)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+class(int)
+```
+Numeric
+```{r}
+#| echo: true
+#| output-location: column-fragment
+num <- 4.3
+print(num)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+class(num)
+```
+Character
+```{r}
+#| echo: true
+#| output-location: column-fragment
+name <- "Your Name"
+print(name)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+class(name)
+```
+
+## Classes {auto-animate="true" visibility="uncounted"}
+Logical
+```{r}
+#| echo: true
+#| output-location: column-fragment
+logT <- TRUE
+logF <- F
+print(logF)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+class(logF)
+```
+Date
+```{r}
+#| echo: true
+#| output-location: fragment
+date1 <- "2023-12-18"
+date2 <- 2023-12-18
+date3 <- as.Date("2023-12-18")
+date4 <- as.Date("18 Dec 2023","%d %b %Y")
+date5 <- as.Date(45076, origin = "1900-01-01")
+print(date1)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+class(date1)
+```
+
+## Class Conversion {auto-animate="true}
+```{r}
+#| echo: true
+num <- "1"
+num <- as.numeric(num)
+
+numLet <- as.numeric(LETTERS)
+charNum <- as.character(1:100)
+
+tf <- c("TRUE","FALSE","FALSE")
+tf <- as.logical(tf)
+
+num <- as.character(num)
+```
+
+# Objects {auto-animate="true" visibility="uncounted"}
+
+## Vectors {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+
+vec1 <- c(2,4,6,8,3,5.5)
+vec2 <- 4
+
+#combining vectors
+newVec <- c(vec1,vec2)
+
+newVec
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+dateVec <- c(as.Date("2023-11-28"),
+             as.Date("2023-12-22"),
+             Sys.Date())
+dateVec
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+newVec[5]
+```
+
+## Matrix {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+let <- matrix(LETTERS,
+              nrow = 6,
+              ncol = 6,
+              byrow = F)
+
+let
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+let[3,5]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+let[,5]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+let[5,]
+```
+
+## Factor {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+gender <- c(1,2,2,1,1,1,2,2,1,2,1)
+
+genFac <- factor(gender,
+                 levels = c(1,2),
+                 labels = c("Male","Female"))
+
+genFac
+```
+
+## Data Frames {auto-animate="true"}
+
+```{r}
+#| echo: true
+age <- c(12,24,NA,23,65,33) # create age vector
+
+gender <- c("M","F","F","M","M","F") #create gender vector
+
+occu <- factor(c(1,4,3,2,4,5), #occupation 
+               levels = c(1:5),
+               labels = c("Unemp","Service","Student","Business","Prof"))
+
+#date of birth
+dob <- c(as.Date("1992-01-11"),as.Date("1992-12-11"),as.Date("1992-11-15"),
+         as.Date("1982-11-11"),as.Date("1992-05-11"),as.Date("1992-11-21"))
+
+#create data frame
+df <- data.frame(age,gender,occu,dob)
+```
+
+## Data Frames {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+df
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+df[2,]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+df[,2]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+df[2]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+df[2,4]
+```
+
+## List {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+list <- list(df,dob,let,newVec)
+
+list
+```
+
+## List {auto-animate="true" visibility="uncounted"}
+List with nth object(s)
+```{r}
+#| echo: true
+#| output-location: column-fragment
+list[2]
+```
+
+nth object
+```{r}
+#| echo: true
+#| output-location: column-fragment
+list[[2]]
+```
+selecting withing object
+```{r}
+#| echo: true
+#| output-location: column-fragment
+list[[2]][4]
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+list[[1]][2,3]
+```
+
+
+# Functions {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+addition <- function(n1,n2){
+  n1 + n2
+}
+
+div <- function(n1,n2){
+  n1 / n2
+}
+```
+
+## Functions {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+
+div(n1 = 55,n2 = 3)
+```
+
+# Packages {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: column-fragment
+library(dplyr)
+
+dplyr::glimpse(df)
+```
+# Working Directory {auto-animate="true"}
+```{.r}
+setwd("~/r4ph23")
+
+setwd("C:/user/ashwini/documents/r4ph23")
+
+getwd()
+```
+
+# Importing Data {auto-animate="true"}
+
+## CSV {auto-animate="true"  visibility="uncounted"}
+```{r}
+#| echo: true
+data <- read.csv("data.csv")
+```
+
+## Excel {auto-animate="true"  visibility="uncounted"}
+```{r}
+#| echo: true
+library(readxl)
+data <- read_excel("data.xlsx")
+```
+
+## Stata, SPSS {auto-animate="true"  visibility="uncounted"}
+```{r}
+#| echo: true
+library(haven)
+write_sav(data,"data.sav")
+write_dta(data,"data.dta")
+```
+
+# Getting Help {auto-animate="true"}
+
+## Help  yourself {auto-animate="true"  visibility="uncounted"}
+
+- Read the manual
+- Check your code
+- Read the error message
+- Web search
+- Read the forums
+- Rubber duck debugging
+
+## Get Help {auto-animate="true"  visibility="uncounted"}
+
+- Ask a friend, colleague 
+- Post of the forums
+  - Describe your goal
+  - Be explicit about your question
+  - Provide specific information
+  - Be courteous
+  - Provide the solution if you found it elsewhere.
