@@ -1,0 +1,464 @@
+---
+title: "Data Visualisation"
+author: "Ashwini Kalantri"
+date: "2023-12-20"
+subtitle: R for Public Health
+date-format: DD MMM YYYY
+logo: r23_head.png
+institute: Department of Community Medicine, MGIMS
+format:
+  revealjs:
+    theme: night
+    multiplex: true
+    slide-number: true
+    css: styles.css
+resource_files:
+- r23_head.png
+- shape_files/war_vil.cpg
+- shape_files/war_vil.dbf
+- shape_files/war_vil.prj
+- shape_files/war_vil.shx
+---
+
+# Grammar of Graphics {auto-animate="true"}
+
+## Grammar of Graphics {auto-animate="true" visibility="uncounted"}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+* **Data** <br> _The variables to be plotted_
+* **Aesthetics** <br> _scales, colours, fills, size, labels etc_
+* **Geometries** <br> _The shapes that represent your data_
+
+:::
+
+::: {.column width="50%"}
+
+* **Facets** <br> _Sub plots_
+* **Statistics** <br> _Statistics and summaries_
+* **Coordinates** <br> _The plotting space_
+* **Themes** <br> _Design elements_
+
+:::
+
+::::
+
+## ggplot2 {auto-animate="true"}
+
+```{r}
+#| echo: true
+library(ggplot2)
+library(dplyr)
+data <- read.csv("data.csv")
+```
+
+```{r}
+
+```
+
+## Canvas {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot()
+```
+
+## Add data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data)
+```
+
+## Aesthetics {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data, aes(x = wt))
+```
+
+## Aesthetics {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data, aes(x = wt,
+                 y = ht))
+```
+
+## Geometry {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data, aes(x = wt,
+                 y = ht)) +
+  geom_point()
+```
+
+## Labels {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data, aes(x = wt,
+                 y = ht)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)") +
+  geom_point()
+```
+
+## Colour {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data, aes(x = wt,
+                 y = ht,
+                 colour = age)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)") +
+  geom_point()
+```
+
+## Size {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+data %>%
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)") +
+  geom_point()
+```
+
+## Facets {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData <- data %>%
+  mutate(phc = factor(phc,
+                      levels = c(1:4),
+                      labels = c("Anji","Kharangana","Talegaon","Waifad")),
+         sex = factor(sex,levels = c(1,2), labels = c("M","F")),
+         edu = factor(edu))
+
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)") +
+  geom_point() +
+  facet_wrap(vars(phc))
+```
+ 
+## Scale {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)") +
+  geom_point() +
+  facet_wrap(vars(phc)) +
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+## Title {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)",
+       title = "Scatter plot of Height against Weight",
+       subtitle = "10-30 year individuals from Wardha",
+       caption = "Data Source: VCAN Project, DCM, MGIMS") +
+  geom_point() +
+  facet_wrap(vars(phc))  +
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+## Theme {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)",
+       title = "Scatter plot of Height against Weight",
+       subtitle = "10-30 year individuals from Wardha",
+       caption = "Data Source: VCAN Project, DCM, MGIMS") +
+  geom_point() +
+  facet_wrap(vars(phc))  +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_minimal()
+```
+
+## Legend {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)",
+       title = "Scatter plot of Height against Weight",
+       subtitle = "10-30 year individuals from Wardha",
+       caption = "Data Source: VCAN Project, DCM, MGIMS") +
+  geom_point() +
+  facet_wrap(vars(phc))  +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Scale Colour {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)",
+       title = "Scatter plot of Height against Weight",
+       subtitle = "10-30 year individuals from Wardha",
+       caption = "Data Source: VCAN Project, DCM, MGIMS") +
+  geom_point() +
+  facet_wrap(vars(phc))  +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_colour_viridis_c()
+```
+
+## New Theme {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: slide
+library(ggthemes)
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht,
+             colour = age,
+             size = edu)) +
+  labs(x = "Weight (kg)",
+       y = "Height (m)",
+       title = "Scatter plot of Height against Weight",
+       subtitle = "10-30 year individuals from Wardha",
+       caption = "Data Source: VCAN Project, DCM, MGIMS") +
+  geom_point() +
+  facet_wrap(vars(phc), strip.position = "bottom")  +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_stata() +
+  theme(legend.position = "bottom") +
+  scale_colour_viridis_c()
+```
+
+## Histogram  {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  ggplot(aes(x = sbp1)) +
+  geom_histogram()
+```
+
+## Density  {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  ggplot(aes(x = sbp1)) +
+  geom_density()
+```
+
+## Histogram and Density  {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  ggplot(aes(x = sbp1)) +
+  geom_density() +
+  geom_histogram()
+```
+
+## Histogram and Density  {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  ggplot(aes(x = sbp1)) +
+  geom_density() +
+  geom_histogram(aes(x = sbp1,
+                     after_stat(density)))
+```
+
+## Barchart  {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+plotData %>% 
+  ggplot(aes(x = phc)) +
+  geom_bar()
+```
+
+## Barchart labels  {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+plotData %>% 
+  ggplot(aes(x = phc)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)),
+            stat = "count",vjust = 2,colour = "white")
+```
+
+## Smooth {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+plotData %>% 
+  ggplot(aes(x = wt,
+             y = ht)) +
+  geom_smooth() 
+```
+
+## Box-plot {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+plotData %>% 
+  ggplot(aes(x = sex,
+             y = wt)) +
+  geom_boxplot()
+```
+
+## Count {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+plotData %>% 
+  ggplot(aes(x = sex,
+             y = phc)) +
+  geom_count()
+
+```
+
+## Maps {auto-animate="true"}
+```{r}
+#| echo: true
+#| output: false
+library(sf)
+
+shp <- st_read(dsn = "shape_files/war_vil.shp")
+
+wardha <- fortify(shp)
+
+map_data <- read.csv("map_data.csv")%>% 
+  mutate(popcat = case_when(ind >= 5000 ~ ">5000",
+                            ind >= 2000 & ind < 5000 ~ "2000-5000",
+                            ind >= 1000 & ind < 2000 ~ "1000-2000",
+                            ind >= 500 & ind < 1000 ~ "500-1000",
+                            ind < 500 ~ "<500")) %>% 
+  filter(!is.na(census_id))
+
+map <- wardha %>% 
+  left_join(map_data,
+            by = c("CEN_2011"="census_id"))
+```
+
+## Maps {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data = map) +
+  geom_sf(aes(fill = popcat)) +
+  theme_minimal()
+```
+
+## Maps {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ggplot(data = map) +
+  geom_sf(aes(fill = popcat)) +
+  theme_minimal() +
+  coord_sf(xlim = c(78.2, 78.8), ylim = c(20.5, 20.9)) +
+  scale_fill_viridis_d(na.value = "grey")
+```
+
+# Grammar of Tables {auto-animate="true"}
+
+## Grammar of Tables {auto-animate="true" visibility="uncounted"}
+
+![](gt_table.svg){width=100%}
+GT Table
+
+## GT Table {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: slide
+library(gt)
+
+map_data %>%
+  head(n = 10) %>% 
+  gt() %>%
+  tab_header(title = md("**Sevagram HDSS**"),
+             subtitle = "Population Details") %>%
+  tab_source_note(source_note = md("**Source:** Wave 1, Sevagram HDSS")) %>%
+  tab_footnote(footnote = "Large Village",
+               locations = cells_body(columns = description_english,
+                                      rows = ind > 5000)) %>%
+  tab_spanner(label = "Population details",
+              columns = c(hh, ind)) %>%
+  cols_hide(c(X, village, census_id, popcat)) %>%
+  cols_move_to_start(description_english) %>%
+  cols_label(description_english = "Village",
+             hh = "Households",
+             ind = "Population") %>%
+  tab_style(style = list(cell_fill(color = "green")),
+            locations = cells_body(columns = hh,
+                                   row = hh > 1000)) %>% 
+  tab_style(style = list(cell_fill(color = "red")),
+            locations = cells_body(columns = ind,
+                                   row = ind < 500))
+
+```

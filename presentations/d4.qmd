@@ -1,0 +1,226 @@
+---
+title: "Biostatistics"
+author: ""
+date: "2023-12-21"
+subtitle: R for Public Health
+date-format: DD MMM YYYY
+logo: r23_head.png
+institute: Department of Community Medicine, MGIMS
+format:
+  revealjs:
+    theme: night
+    multiplex: true
+    slide-number: true
+    css: styles.css
+resource_files:
+- r23_head.png
+---
+
+# Biostatistics
+
+```{r}
+#| echo: true
+#| output-location: fragment
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+df <- read_csv("data.csv") %>%
+  mutate(sex = factor(sex,
+                      levels = 1:2,
+                      labels = c("M", "F")))
+```
+
+# Tests for normality
+
+## Histogram {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+df %>%
+  ggplot(aes(x = sbp1)) +
+  geom_histogram(colour = "red",
+                 fill = "blue")
+```
+
+## Density plot {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+df %>% 
+  ggplot(aes(x=sbp1))+
+  geom_density()
+```
+
+## Histogram with Density plot  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+df %>%
+  ggplot(aes(x = sbp1)) +
+  geom_histogram(aes(x=sbp1,
+                     after_stat(density)),
+                 colour="red",
+                 fill="blue")+geom_density(lwd=2)
+```
+
+## Box plot  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+df %>% 
+  ggplot(aes(x=sbp1))+
+  geom_boxplot()
+```
+
+## Q-Q Plot {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+df %>% 
+  ggplot(aes(sample = sbp1)) +
+  geom_qq()
+```
+
+## Kolmogorov-Smirnov Test  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ks.test(df$sbp1, pnorm)
+```
+
+## Shapiro test {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+shapiro.test(df$sbp1)
+```
+
+## Lilliefors test  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+library(nortest)
+lillie.test(df$sbp1)
+```
+
+# Tests of Significance
+
+## t-test  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+ttest_result <- t.test(sbp1 ~ sex,
+                       data = df)
+
+print(ttest_result)
+```
+
+## Paired t-test   {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+pairedttest <- t.test(df$sbp1,
+                      df$sbp2,
+                      paired=TRUE)
+
+pairedttest
+```
+
+## Chi-square test {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+cst <- chisq.test(df$sex,
+                  df$curSmoke)
+cst
+```
+
+## Wilcoxon signed rank test {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+WT <- wilcox.test(df$dbp1,
+                  df$dbp2,
+                  paired = TRUE)
+WT
+```
+
+## Mann Whitney Test {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+MW <- wilcox.test(dbp1 ~ sex,data = df)
+
+MW
+```
+
+## Kruskal-Wallis test {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+KWT <- kruskal.test(df$dbp1,
+                    df$dbp2,
+                    df$dbp3)
+KWT
+```
+
+# Correlation
+
+## Pearson correlation coefficient  {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+correlation_coefficient <- cor(df$sbp1, df$sbp2)
+print(correlation_coefficient)
+```
+
+## Test the significance of the correlation coefficient {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+cor_test_result <- cor.test(df$sbp1, df$sbp2)
+print(cor_test_result)
+```
+
+## Spearman correlation {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+spearman_coefficient <- cor(df$dbp1,df$dbp2, method = "spearman")
+print(spearman_coefficient)
+```
+
+## Test the significance of the Spearman correlation coefficient {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+spearman_test_result <- cor.test(df$dbp1,df$dbp2, method = "spearman")
+print(spearman_test_result) 
+```
+
+
+## Anova {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+library(tidyr)
+dfLong <- df %>% 
+  select(starts_with("sbp")) %>% 
+  pivot_longer(cols = everything(),
+               names_to = "type",
+               values_to = "bp")
+
+AR <- aov(bp~type, data = dfLong)
+summary(AR)
+```
+
+## MANOVA {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+manova_model <- manova(cbind(sbp1,sbp2,dbp1,dbp2) ~ edu,
+                       data = df)
+summary(manova_model)
+```

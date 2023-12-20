@@ -1,23 +1,21 @@
 ---
-title: "R for Public Health"
-subtitle: "18 - 23 Dec 2023"
-# date: "2023-12-18"
-# date-format: "DD MMM YYYY"
+title: "Introduction to R"
+subtitle: "R for Public Health"
 author: "Ashwini Kalantri"
+date: "2023-12-18"
+date-format: DD MMM YYYY
 logo: r23_head.png
-institute: "Department of Community Medicine, MGIMS"
+institute: Department of Community Medicine, MGIMS
 format:
   revealjs:
     theme: night
     slide-number: true
     css: styles.css
-    picture: r4ph23.png
 ---
 
 # Get started
 ```{r}
 #| echo: true
-#| output: asis
 #| output-location: column-fragment
 "Hello World!"
 ```
@@ -541,8 +539,8 @@ data <- read_excel("data.xlsx")
 ```{r}
 #| echo: true
 library(haven)
-write_sav(data,"data.sav")
-write_dta(data,"data.dta")
+data <- read_sav("data.sav")
+data <- read_dta("data.dta")
 ```
 
 # Getting Help {auto-animate="true"}

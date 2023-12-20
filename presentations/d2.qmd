@@ -1,0 +1,590 @@
+---
+title: "Data Wrangling"
+author: "Mudita Joshi, Mayuri Padole, Ashwini Kalantri"
+date: "2023-12-19"
+subtitle: R for Public Health
+date-format: DD MMM YYYY
+logo: r23_head.png
+institute: Department of Community Medicine, MGIMS
+format:
+  revealjs:
+    theme: night
+    slide-number: true
+    css: styles.css
+resource_files:
+  - r23_head.png
+---
+
+## Import Data {auto-animate="true"}
+
+```{r}
+#| echo: true
+library(readr)
+data <- read_csv("data.csv")
+```
+
+## Understand structure of dataset {auto-animate="true"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+str(data)            
+```
+
+## Understand structure of dataset {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+library(dplyr)
+glimpse(data)
+```
+
+## Understand structure of dataset {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+names(data)
+```
+
+## Understand structure of dataset {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+head(data)
+```
+
+# 5 verbs of dplyr {auto-animate="true"}
+
+- Select
+
+- Arrange
+
+- Filter
+
+- Mutate
+
+- Summarize
+
+# Select {auto-animate="true"}
+
+## Select {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+select(.data = data, village, phc)
+```
+
+## Select {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+select(data, phc, village) 
+```
+
+## Select {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  select(adSugar,bsugMeasure) 
+```
+
+## Select {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(-curSmokeless, -smokeWork, -edu, -age)
+```
+
+## Select using helpers {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(last_col())
+```
+
+## Select using helpers {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(starts_with("salt"))
+```
+
+## Select using helpers {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(ends_with("12m"))
+```
+
+## Select using helpers {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(contains("HTN"))
+```
+
+## Select using helpers {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(num_range("hr", 1:2))
+```
+
+## Select using helpers {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  group_by(sex,occu) %>% 
+  select(group_cols())
+```
+
+# Arrange {auto-animate="true"}
+
+## Arrange {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+arrange(.data = data, age)
+```
+
+## Arrange {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(phc, age, ht, wt, hr1) %>% 
+  arrange(ht)
+```
+
+## Arrange {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(phc, age, ht, wt, hr1) %>%
+  arrange(desc(ht))
+```
+
+## Arrange {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(phc, age, ht, wt, hr1) %>%
+  arrange(age,ht)
+```
+
+## Arrange {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(village, wt, hr1, sex, ht) %>% 
+  group_by(village, sex) %>% 
+  arrange(ht, .by_group = T)
+```
+
+## Ungroup {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(village, wt, hr1, sex, ht) %>% 
+  group_by(village, sex) %>%
+  arrange(ht, .by_group = T) %>%   
+  ungroup()
+```
+
+# Filter {auto-animate="true"}
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+filter(.data=data, village == 1)
+```
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(village == 1)
+```
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(village != 1)
+```
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(ht >= 150)
+```
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(!is.na(ht))
+```
+
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(is.na(ht) & is.na(wt))
+```
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(is.na(ht) | is.na(wt))
+```
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(!is.na(ht) & !is.na(wt))
+```
+## Filter {auto-animate="true" visibility="uncounted"}
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  filter(!is.na(ht & wt)) 
+```
+
+# Mutate {auto-animate="true"}
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data$NewVar <- data$dob
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data$NewVar
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+Null will remove that variable being specified, here it will be removing NewVar
+```{r}
+#| echo: true
+data$NewVar <- NULL
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data$NewVar
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+mutate(data,
+       bmi = wt / ((ht / 100) ^ 2)) %>%
+  select(id, ht, wt, bmi)
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id, ht, wt) %>%
+  mutate(ht_m = ht / 100,
+         bmi = wt / (ht_m ^ 2))
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  mutate(ht_m = ht/100,
+         bmi = round(wt/(ht_m^2),2))
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  mutate(ht_m = ht/100, 
+         bmi = round(wt/(ht_m^2),2),
+         dob = as.Date(dob,format = "%d-%m-%Y")) %>% 
+  select(id,ht_m,bmi,dob)
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment                
+
+#conditional mutating, if-then-else function
+data %>%
+  mutate(highSBP = if_else(sbp1 > 120,
+                           "High",
+                           "Normal")) %>% 
+  select(id,highSBP,sbp1)
+```
+
+## Mutate {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+#categorizing conditional formatting
+data %>%
+  mutate(weightCat = case_when(wt < 40 ~ "low",
+                               wt >= 40 & wt < 60 ~ "Average",
+                               wt >= 60 ~ "High")) %>%
+  select(wt, weightCat)
+```
+
+# Summarise {auto-animate="true"}
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, waist, hip) %>%
+  na.omit() %>%
+  summarise(mean(wt), 
+            sd(wt), 
+            mean(ht), 
+            sd(ht))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, waist, hip) %>%
+  na.omit() %>%
+  summarise(across(c(wt:hip), mean))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, waist, hip) %>%
+  na.omit() %>%
+  summarise(across(c(ht, wt, waist, hip), mean, na.rm = TRUE))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, waist, hip) %>%
+  na.omit() %>%
+  summarise(across(everything(), list(min = min, max = max)))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, waist, hip, sex, sbp1) %>%
+  na.omit() %>%
+  mutate(highSBP = if_else(sbp1 > 120, "High", "Normal")) %>%
+  group_by(sex, highSBP) %>%
+  summarise(across(everything(), list(mean, sd, median, min, max)))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(wt, ht, sex, phc) %>%
+  mutate(phc = as.character(phc)) %>%
+  group_by(sex) %>%
+  summarise(across(where(is.numeric), mean, na.rm = T))
+```
+
+## Summarise {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  group_by(phc, sex) %>%
+  summarise(N = n())
+```
+
+# Combining Tables {auto-animate="true"}
+## Pivot Long to Wide {auto-animate="true"}
+```{r}
+#| echo: true
+#install.packages("tidyr")
+#install.packages("janitor")
+library(tidyr)
+library(janitor)
+```
+
+```{r}
+#| echo: true
+#| output-location: column-fragment
+data %>% 
+  group_by(occu,sex) %>% 
+  summarise(N = n()) %>% 
+  pivot_wider(names_from = sex,
+              values_from = N)
+```
+
+## Add totals {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  group_by(occu,sex) %>% 
+  summarise(N = n()) %>% 
+  pivot_wider(names_from = sex,
+              values_from = N) %>% 
+  replace(is.na(.),0) %>% 
+  adorn_totals(where = c("row","col"))
+```
+
+## Pivot Wide to Long {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  select(id,sbp1,sbp2,sbp3) %>% 
+  pivot_longer(cols = contains("sbp"),
+               names_to = "sbp_no",
+               values_to = "bp")
+```
+
+## Lead Lag {auto-animate="true"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  select(id,sbp1,sbp2,sbp3) %>% 
+  pivot_longer(cols = contains("sbp"),
+               names_to = "sbp_no",
+               values_to = "bp") %>% 
+  group_by(id) %>% 
+  mutate(diff = bp - lag(bp))
+```
+
+## Joining data {auto-animate="true"}
+```{r}
+#| echo: true
+data_sbp <- data %>% 
+  select(id,sbp1,sbp2,sbp3) %>% 
+  pivot_longer(cols = contains("sbp"),
+               names_to = "sbp_no",
+               values_to = "bp")
+```
+
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id,village,age,sex,ht,wt) %>% 
+  left_join(data_sbp)
+```
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id,village,age,sex,ht,wt) %>% 
+  left_join(data_sbp,
+            by = "id")
+```
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id,village,age,sex,ht,wt) %>% 
+  left_join(data_sbp,
+            by = "id",
+            keep = TRUE)
+```
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data_sbp %>%
+  right_join(data %>% 
+              select(id,village,age,sex,ht,wt),
+            by = "id")
+```
+
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id, village, age, sex, ht, wt) %>%
+  filter(age > 15) %>%
+  inner_join(data_sbp,
+            by = "id")
+```
+
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>%
+  select(id, village, age, sex, ht, wt) %>% 
+  filter(age > 20) %>% 
+  bind_rows(data %>%
+              select(id, village, age, sex, ht, wt) %>% 
+              filter(age <= 20))
+```
+
+## Joining data {auto-animate="true" visibility="uncounted"}
+```{r}
+#| echo: true
+#| output-location: fragment
+data %>% 
+  select(id, village, age, sex, ht, wt) %>% 
+  bind_cols(data %>% 
+              select(id, dob, caste, occu))
+```
